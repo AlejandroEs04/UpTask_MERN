@@ -1,18 +1,21 @@
 import express from 'express';
-import {
-    obtenerProyecto, 
-    nuevoProyecto, 
-    obtenerProyectos, 
-    editarProyecto, 
-    eliminarColaborador, 
-    eliminarProyecto,
-    agregarColaborador, 
-    obtenerTareas
-} from '../controllers/proyectoController';
-import checkAuth from '../middleware/checkAuth';
-
 const router = express.Router();
 
-router.get('/')
+import { obtenerProyecto, nuevoProyecto, obtenerProyectos, editarProyecto, eliminarColaborador, eliminarProyecto, agregarColaborador } from '../controllers/proyectoController.js';
+import checkAuth from '../middleware/checkAuth.js';
 
-export default router;
+router
+    .route('/')
+    .get(checkAuth, obtenerProyectos)
+    .post(checkAuth, nuevoProyecto);
+
+router
+    .route('/:id')
+    .get(checkAuth, obtenerProyecto)
+    .put(checkAuth, editarProyecto)
+    .delete(checkAuth, eliminarProyecto);
+    
+router.post('/agregar-colaborador/:id', checkAuth, agregarColaborador);
+router.post('/eliminar-colaborador/:id', checkAuth, eliminarColaborador);
+
+export default router
